@@ -1,0 +1,130 @@
+package com.mcristi;
+
+import com.bitwig.extension.controller.api.*;
+import com.bitwig.extension.controller.ControllerExtension;
+import com.mcristi.controllers.AmtFs2;
+import com.mcristi.controllers.RolandA800Pro;
+
+public class DrivenByMeliExtension extends ControllerExtension
+{
+   /**
+    * Controllers handlers
+    */
+   private RolandA800Pro rolandA800Pro;
+   private AmtFs2 amtFs2;
+
+   protected DrivenByMeliExtension(final DrivenByMeliExtensionDefinition definition, final ControllerHost host)
+   {
+      super(definition, host);
+   }
+
+   @Override
+   public void init()
+   {
+      ControllerHost host = getHost();
+
+      Application application = host.createApplication();
+      Project project = host.getProject();
+      DetailEditor detailEditor = host.createDetailEditor();
+
+      Transport transport = host.createTransport();
+      transport.isPlaying().markInterested();
+      transport.defaultLaunchQuantization().markInterested();
+
+      MasterTrack masterTrack = host.createMasterTrack(0);
+      masterTrack.volume().markInterested();
+      masterTrack.volume().setIndication(true);
+
+      TrackBank trackBank = host.createTrackBank(Globals.NUMBER_OF_TRACKS, Globals.NUMBER_OF_SENDS, Globals.NUMBER_OF_SCENES);
+      SceneBank sceneBank = trackBank.sceneBank();
+
+      for (int i = 0; i < Globals.NUMBER_OF_TRACKS; i++) {
+         trackBank.getItemAt(i).arm().markInterested();
+         trackBank.getItemAt(i).trackType().markInterested();
+
+         for (int j = 0; j < Globals.NUMBER_OF_SCENES; j++) {
+            sceneBank.getScene(j).exists().markInterested();
+            trackBank.getItemAt(i).clipLauncherSlotBank().getItemAt(j).hasContent().markInterested();
+            trackBank.getItemAt(i).clipLauncherSlotBank().getItemAt(j).isRecording().markInterested();
+            trackBank.getItemAt(i).clipLauncherSlotBank().getItemAt(j).isPlaying().markInterested();
+         }
+      }
+
+      Clip cursorClip = host.createLauncherCursorClip(Globals.NUMBER_OF_TRACKS, Globals.NUMBER_OF_SCENES);
+      cursorClip.exists().markInterested();
+      cursorClip.getLoopLength().markInterested();
+      cursorClip.getPlayStop().markInterested();
+
+      CursorTrack cursorTrack = host.createCursorTrack("CURSOR_TRACK", "My Cursor Track", Globals.NUMBER_OF_SENDS, Globals.NUMBER_OF_SCENES, true);
+      PinnableCursorDevice cursorDevice = cursorTrack.createCursorDevice("CURSOR_DEVICE", "My Cursor Device", Globals.NUMBER_OF_SENDS, CursorDeviceFollowMode.FOLLOW_SELECTION);
+
+      CursorRemoteControlsPage cursorRemoteControlsPage = cursorDevice.createCursorRemoteControlsPage(9);
+      cursorRemoteControlsPage.hasNext().markInterested();
+      cursorRemoteControlsPage.hasPrevious().markInterested();
+      cursorRemoteControlsPage.selectedPageIndex().markInterested();
+      cursorRemoteControlsPage.setHardwareLayout(HardwareControlType.KNOB, 9);
+
+      for (int i = 0; i < 9; i++) {
+         final RemoteControl parameter = cursorRemoteControlsPage.getParameter(i);
+         parameter.markInterested();
+         parameter.exists().markInterested();
+         parameter.setIndication(true);
+      }
+
+
+      // Create NoteInputs + Omni
+      MidiIn midiIn0 = host.getMidiInPort(0);
+      NoteInput multiBi = midiIn0.createNoteInput("MultiBi - Omni", "??????");
+      NoteInput multiBi1 = midiIn0.createNoteInput("MultiBi - Ch 1", "?0????");
+      NoteInput multiBi2 = midiIn0.createNoteInput("MultiBi - Ch 2", "?1????");
+
+      multiBi.setShouldConsumeEvents(false);
+      multiBi1.setShouldConsumeEvents(false);
+
+      midiIn0.setMidiCallback(this::onMidi);
+      midiIn0.setSysexCallback(this::onSysex);
+
+
+      // initialize controllers
+      rolandA800Pro = new RolandA800Pro(
+              host, transport, application, trackBank, sceneBank,
+              cursorClip, project, detailEditor, cursorRemoteControlsPage,
+              masterTrack
+      );
+
+      amtFs2 = new AmtFs2(
+              host, application, trackBank, sceneBank, project,
+              detailEditor, transport, cursorClip
+      );
+
+
+      host.showPopupNotification("driven-by-meli Initialized");
+   }
+
+   private void onMidi(int status, int data1, int data2) {
+      // host.showPopupNotification(status + " " + data1 + " " + data2);
+
+      if (status == 176) { // check it the event is not a midi note
+         amtFs2.handleMidiEvent(data1, data2);
+         rolandA800Pro.handleMidiEvent(data1, data2);
+      }
+   }
+
+   private void onSysex(String data) {
+
+   }
+
+   @Override
+   public void exit()
+   {
+      // Perform any cleanup once the driver exits
+      getHost().showPopupNotification("driven-by-meli Exited");
+   }
+
+   @Override
+   public void flush()
+   {
+      // Send any updates you need here.
+   }
+
+}
