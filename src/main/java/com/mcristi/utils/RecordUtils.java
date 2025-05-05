@@ -69,7 +69,7 @@ public class RecordUtils {
     }
 
     public static void quantizeClipLength(ControllerHost host, Clip cursorClip, Transport transport) {
-        host.scheduleTask(() -> { // Small delay to ensure the clip is fully loaded
+        host.scheduleTask(() -> { // Delay to ensure the clip is launched
             if (cursorClip.exists().get()) { // Ensure clip content is loaded
                 String launchQuantization = transport.defaultLaunchQuantization().get();
 

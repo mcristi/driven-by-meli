@@ -53,22 +53,22 @@ public class RolandA800Pro {
             // L buttons
             case L1:
                 if (data2 == ON) {
-                    DeviceUtils.setDevicePage(cursorRemoteControlsPage, 0);
+                    DeviceUtils.setPage(cursorRemoteControlsPage, 0);
                 }
                 break;
             case L2:
                 if (data2 == ON) {
-                    DeviceUtils.setDevicePage(cursorRemoteControlsPage, 1);
+                    DeviceUtils.setPage(cursorRemoteControlsPage, 1);
                 }
                 break;
             case L3:
                 if (data2 == ON) {
-                    DeviceUtils.setDevicePage(cursorRemoteControlsPage, 2);
+                    DeviceUtils.setPage(cursorRemoteControlsPage, 2);
                 }
                 break;
             case L4:
                 if (data2 == ON) {
-                    DeviceUtils.setDevicePage(cursorRemoteControlsPage, 3);
+                    DeviceUtils.setPage(cursorRemoteControlsPage, 3);
                 }
                 break;
             case L5:
@@ -148,31 +148,31 @@ public class RolandA800Pro {
 
             // Rotary knobs (R)
             case R1:
-                DeviceUtils.setDevicePageParameter(cursorRemoteControlsPage, 0, data2);
+                DeviceUtils.setParameter(cursorRemoteControlsPage, 0, data2);
                 break;
             case R2:
-                DeviceUtils.setDevicePageParameter(cursorRemoteControlsPage, 1, data2);
+                DeviceUtils.setParameter(cursorRemoteControlsPage, 1, data2);
                 break;
             case R3:
-                DeviceUtils.setDevicePageParameter(cursorRemoteControlsPage, 2, data2);
+                DeviceUtils.setParameter(cursorRemoteControlsPage, 2, data2);
                 break;
             case R4:
-                DeviceUtils.setDevicePageParameter(cursorRemoteControlsPage, 3, data2);
+                DeviceUtils.setParameter(cursorRemoteControlsPage, 3, data2);
                 break;
             case R5:
-                DeviceUtils.setDevicePageParameter(cursorRemoteControlsPage, 4, data2);
+                DeviceUtils.setParameter(cursorRemoteControlsPage, 4, data2);
                 break;
             case R6:
-                DeviceUtils.setDevicePageParameter(cursorRemoteControlsPage, 5, data2);
+                DeviceUtils.setParameter(cursorRemoteControlsPage, 5, data2);
                 break;
             case R7:
-                DeviceUtils.setDevicePageParameter(cursorRemoteControlsPage, 6, data2);
+                DeviceUtils.setParameter(cursorRemoteControlsPage, 6, data2);
                 break;
             case R8:
-                DeviceUtils.setDevicePageParameter(cursorRemoteControlsPage, 7, data2);
+                DeviceUtils.setParameter(cursorRemoteControlsPage, 7, data2);
                 break;
             case R9:
-                DeviceUtils.setDevicePageParameter(cursorRemoteControlsPage, 8, data2);
+                DeviceUtils.setParameter(cursorRemoteControlsPage, 8, data2);
                 break;
 
             default:

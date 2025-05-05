@@ -3,6 +3,7 @@ package com.mcristi;
 import com.bitwig.extension.controller.api.*;
 import com.bitwig.extension.controller.ControllerExtension;
 import com.mcristi.controllers.AmtFs2;
+import com.mcristi.controllers.PaintAudioMidiCaptain;
 import com.mcristi.controllers.RolandA800Pro;
 
 public class DrivenByMeliExtension extends ControllerExtension
@@ -12,6 +13,7 @@ public class DrivenByMeliExtension extends ControllerExtension
     */
    private RolandA800Pro rolandA800Pro;
    private AmtFs2 amtFs2;
+   private PaintAudioMidiCaptain paintAudioMidiCaptain;
 
    protected DrivenByMeliExtension(final DrivenByMeliExtensionDefinition definition, final ControllerHost host)
    {
@@ -56,6 +58,8 @@ public class DrivenByMeliExtension extends ControllerExtension
       cursorClip.getPlayStop().markInterested();
 
       CursorTrack cursorTrack = host.createCursorTrack("CURSOR_TRACK", "My Cursor Track", Globals.NUMBER_OF_SENDS, Globals.NUMBER_OF_SCENES, true);
+      cursorTrack.position().markInterested();
+
       PinnableCursorDevice cursorDevice = cursorTrack.createCursorDevice("CURSOR_DEVICE", "My Cursor Device", Globals.NUMBER_OF_SENDS, CursorDeviceFollowMode.FOLLOW_SELECTION);
 
       CursorRemoteControlsPage cursorRemoteControlsPage = cursorDevice.createCursorRemoteControlsPage(9);
@@ -97,6 +101,11 @@ public class DrivenByMeliExtension extends ControllerExtension
               detailEditor, transport, cursorClip
       );
 
+      paintAudioMidiCaptain = new PaintAudioMidiCaptain(
+              host, transport, application, trackBank, sceneBank,
+              cursorClip, project, detailEditor, cursorTrack
+      );
+
 
       host.showPopupNotification("driven-by-meli Initialized");
    }
@@ -105,8 +114,16 @@ public class DrivenByMeliExtension extends ControllerExtension
       // host.showPopupNotification(status + " " + data1 + " " + data2);
 
       if (status == 176) { // check it the event is not a midi note
-         amtFs2.handleMidiEvent(data1, data2);
-         rolandA800Pro.handleMidiEvent(data1, data2);
+         if (data1 >= 14 && data1 <= 15) {  // AMT FS2 controller range
+            amtFs2.handleMidiEvent(data1, data2);
+         } else if (
+           (data1 >= 20 && data1 <= 32) ||   // L and B buttons
+           (data1 >= 102 && data1 <= 119)    // R and S controls
+        ) {
+            rolandA800Pro.handleMidiEvent(data1, data2);
+         } else if (data1 >= 60 && data1 <= 80) {
+            paintAudioMidiCaptain.handleMidiEvent(data1, data2);
+         }
       }
    }
 
