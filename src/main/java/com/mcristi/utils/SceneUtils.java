@@ -5,18 +5,18 @@ import com.bitwig.extension.controller.api.TrackBank;
 import com.mcristi.Globals;
 
 
-public class ScenesUtils {
+public class SceneUtils {
 
-    private ScenesUtils() {
+    private SceneUtils() {
     }
 
-    public static void launchNextScene(SceneBank sceneBank, TrackBank trackBank) {
-        int currentSceneIndex = ScenesUtils.getCurrentSceneIndex(trackBank);
+    public static void launchNext(SceneBank sceneBank, TrackBank trackBank) {
+        int currentSceneIndex = SceneUtils.getCurrentSceneIndex(trackBank);
         sceneBank.launchScene(currentSceneIndex == Globals.NUMBER_OF_SCENES - 1 ? currentSceneIndex : currentSceneIndex + 1);
     }
 
-    public static void launchPrevScene(SceneBank sceneBank, TrackBank trackBank) {
-        int currentSceneIndex = ScenesUtils.getCurrentSceneIndex(trackBank);
+    public static void launchPrev(SceneBank sceneBank, TrackBank trackBank) {
+        int currentSceneIndex = SceneUtils.getCurrentSceneIndex(trackBank);
         sceneBank.launchScene(currentSceneIndex == 0 ? 0 : currentSceneIndex - 1);
     }
 

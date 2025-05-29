@@ -1,8 +1,9 @@
 package com.mcristi.controllers;
 
 import com.bitwig.extension.controller.api.*;
+import com.mcristi.utils.ClipUtils;
 import com.mcristi.utils.RecordUtils;
-import com.mcristi.utils.ScenesUtils;
+import com.mcristi.utils.SceneUtils;
 import com.mcristi.utils.TrackUtils;
 
 public class PaintAudioMidiCaptain {
@@ -59,18 +60,18 @@ public class PaintAudioMidiCaptain {
                 break;
             case B4:
                 if (data2 == OFF) {
-                    application.undo();
+                    ClipUtils.delete(cursorClip);
                 }
                 break;
 
             case UP:
                 if (data2 == OFF) {
-                    ScenesUtils.launchPrevScene(sceneBank, trackBank);
+                    SceneUtils.launchPrev(sceneBank, trackBank);
                 }
                 break;
             case DOWN:
                 if (data2 == OFF) {
-                    ScenesUtils.launchNextScene(sceneBank, trackBank);
+                    SceneUtils.launchNext(sceneBank, trackBank);
                 }
                 break;
 
