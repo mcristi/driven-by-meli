@@ -19,11 +19,20 @@ public class TrackUtils {
         trackBank.getItemAt(trackPosition).volume().set(value, 128);
     }
 
-    public static void arm(TrackBank trackBank, CursorTrack cursorTrack, int index) {
-        for (int i = 0; i < 3; i++) {
-            trackBank.getItemAt(i).arm().set(false);
+    public static void unarmAll(TrackBank trackBank) {
+        for (int i = 0; i < trackBank.itemCount().get(); i++) {
+            try {
+                Track track = trackBank.getItemAt(i);
+                if (track.exists().get()) {
+                    track.arm().set(false);
+                }
+            } catch (Exception e) {
+                break; // Stop iterating if we hit an invalid index
+            }
         }
+    }
 
+    public static void arm(TrackBank trackBank, CursorTrack cursorTrack, int index) {
         Track track = trackBank.getItemAt(index);
         track.arm().set(true);
 

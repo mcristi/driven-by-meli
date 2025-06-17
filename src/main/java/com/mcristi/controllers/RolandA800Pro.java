@@ -51,26 +51,6 @@ public class RolandA800Pro {
     public void handleMidiEvent(int data1, int data2) {
         switch (data1) {
             // L buttons
-            case L1:
-                if (data2 == ON) {
-                    DeviceUtils.setPage(cursorRemoteControlsPage, 0);
-                }
-                break;
-            case L2:
-                if (data2 == ON) {
-                    DeviceUtils.setPage(cursorRemoteControlsPage, 1);
-                }
-                break;
-            case L3:
-                if (data2 == ON) {
-                    DeviceUtils.setPage(cursorRemoteControlsPage, 2);
-                }
-                break;
-            case L4:
-                if (data2 == ON) {
-                    DeviceUtils.setPage(cursorRemoteControlsPage, 3);
-                }
-                break;
             case L5:
                 if (data2 == ON) {
                     transport.stop();
@@ -143,36 +123,7 @@ public class RolandA800Pro {
                 handleSlider(7, data2);
                 break;
             case S9:
-                masterTrack.volume().set(data2, 128);
-                break;
-
-            // Rotary knobs (R)
-            case R1:
-                DeviceUtils.setParameter(cursorRemoteControlsPage, 0, data2);
-                break;
-            case R2:
-                DeviceUtils.setParameter(cursorRemoteControlsPage, 1, data2);
-                break;
-            case R3:
-                DeviceUtils.setParameter(cursorRemoteControlsPage, 2, data2);
-                break;
-            case R4:
-                DeviceUtils.setParameter(cursorRemoteControlsPage, 3, data2);
-                break;
-            case R5:
-                DeviceUtils.setParameter(cursorRemoteControlsPage, 4, data2);
-                break;
-            case R6:
-                DeviceUtils.setParameter(cursorRemoteControlsPage, 5, data2);
-                break;
-            case R7:
-                DeviceUtils.setParameter(cursorRemoteControlsPage, 6, data2);
-                break;
-            case R8:
-                DeviceUtils.setParameter(cursorRemoteControlsPage, 7, data2);
-                break;
-            case R9:
-                DeviceUtils.setParameter(cursorRemoteControlsPage, 8, data2);
+                handleSlider(8, data2);
                 break;
 
             default:

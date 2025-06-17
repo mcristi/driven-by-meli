@@ -38,11 +38,14 @@ public class DrivenByMeliExtension extends ControllerExtension
       masterTrack.volume().setIndication(true);
 
       TrackBank trackBank = host.createTrackBank(Globals.NUMBER_OF_TRACKS, Globals.NUMBER_OF_SENDS, Globals.NUMBER_OF_SCENES);
+      trackBank.itemCount().markInterested();
+
       SceneBank sceneBank = trackBank.sceneBank();
 
       for (int i = 0; i < Globals.NUMBER_OF_TRACKS; i++) {
          trackBank.getItemAt(i).arm().markInterested();
          trackBank.getItemAt(i).trackType().markInterested();
+         trackBank.getItemAt(i).exists().markInterested();
 
          for (int j = 0; j < Globals.NUMBER_OF_SCENES; j++) {
             sceneBank.getScene(j).exists().markInterested();
@@ -60,20 +63,20 @@ public class DrivenByMeliExtension extends ControllerExtension
       CursorTrack cursorTrack = host.createCursorTrack("CURSOR_TRACK", "My Cursor Track", Globals.NUMBER_OF_SENDS, Globals.NUMBER_OF_SCENES, true);
       cursorTrack.position().markInterested();
 
-      PinnableCursorDevice cursorDevice = cursorTrack.createCursorDevice("CURSOR_DEVICE", "My Cursor Device", Globals.NUMBER_OF_SENDS, CursorDeviceFollowMode.FOLLOW_SELECTION);
+//      PinnableCursorDevice cursorDevice = cursorTrack.createCursorDevice("CURSOR_DEVICE", "My Cursor Device", Globals.NUMBER_OF_SENDS, CursorDeviceFollowMode.FOLLOW_SELECTION);
 
-      CursorRemoteControlsPage cursorRemoteControlsPage = cursorDevice.createCursorRemoteControlsPage(9);
-      cursorRemoteControlsPage.hasNext().markInterested();
-      cursorRemoteControlsPage.hasPrevious().markInterested();
-      cursorRemoteControlsPage.selectedPageIndex().markInterested();
-      cursorRemoteControlsPage.setHardwareLayout(HardwareControlType.KNOB, 9);
-
-      for (int i = 0; i < 9; i++) {
-         final RemoteControl parameter = cursorRemoteControlsPage.getParameter(i);
-         parameter.markInterested();
-         parameter.exists().markInterested();
-         parameter.setIndication(true);
-      }
+//      CursorRemoteControlsPage cursorRemoteControlsPage = cursorDevice.createCursorRemoteControlsPage(9);
+//      cursorRemoteControlsPage.hasNext().markInterested();
+//      cursorRemoteControlsPage.hasPrevious().markInterested();
+//      cursorRemoteControlsPage.selectedPageIndex().markInterested();
+//      cursorRemoteControlsPage.setHardwareLayout(HardwareControlType.KNOB, 9);
+//
+//      for (int i = 0; i < 9; i++) {
+//         final RemoteControl parameter = cursorRemoteControlsPage.getParameter(i);
+//         parameter.markInterested();
+//         parameter.exists().markInterested();
+//         parameter.setIndication(true);
+//      }
 
 
       // Create NoteInputs + Omni
@@ -92,8 +95,7 @@ public class DrivenByMeliExtension extends ControllerExtension
       // initialize controllers
       rolandA800Pro = new RolandA800Pro(
               host, transport, application, trackBank, sceneBank,
-              cursorClip, project, detailEditor, cursorRemoteControlsPage,
-              masterTrack
+              cursorClip, project, detailEditor, null, masterTrack
       );
 
       amtFs2 = new AmtFs2(

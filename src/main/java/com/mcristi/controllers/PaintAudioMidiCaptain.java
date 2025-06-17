@@ -45,16 +45,19 @@ public class PaintAudioMidiCaptain {
         switch (data1) {
             case B1:
                 if (data2 == OFF) {
+                    TrackUtils.unarmAll(trackBank);
                     TrackUtils.arm(trackBank, cursorTrack, 0);
                 }
                 break;
             case B2:
                 if (data2 == OFF) {
+                    TrackUtils.unarmAll(trackBank);
                     TrackUtils.arm(trackBank, cursorTrack, 1);
                 }
                 break;
             case B3:
                 if (data2 == OFF) {
+                    TrackUtils.unarmAll(trackBank);
                     TrackUtils.arm(trackBank, cursorTrack, 2);
                 }
                 break;
