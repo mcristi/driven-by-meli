@@ -3,6 +3,7 @@ package com.mcristi.utils;
 import com.bitwig.extension.controller.api.CursorTrack;
 import com.bitwig.extension.controller.api.Track;
 import com.bitwig.extension.controller.api.TrackBank;
+import com.bitwig.extension.controller.api.PinnableCursorDevice;
 
 
 public class TrackUtils {
@@ -32,10 +33,16 @@ public class TrackUtils {
         }
     }
 
-    public static void arm(TrackBank trackBank, CursorTrack cursorTrack, int index) {
+    public static void arm(TrackBank trackBank, CursorTrack cursorTrack, PinnableCursorDevice cursorDevice, int index) {
+        TrackUtils.unarmAll(trackBank);
+
         Track track = trackBank.getItemAt(index);
         track.arm().set(true);
+        track.selectInEditor();
 
         cursorTrack.selectChannel(track);
+
+        cursorDevice.selectFirst();
+        cursorDevice.isWindowOpen().set(true);
     }
 }

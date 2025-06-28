@@ -63,20 +63,20 @@ public class DrivenByMeliExtension extends ControllerExtension
       CursorTrack cursorTrack = host.createCursorTrack("CURSOR_TRACK", "My Cursor Track", Globals.NUMBER_OF_SENDS, Globals.NUMBER_OF_SCENES, true);
       cursorTrack.position().markInterested();
 
-//      PinnableCursorDevice cursorDevice = cursorTrack.createCursorDevice("CURSOR_DEVICE", "My Cursor Device", Globals.NUMBER_OF_SENDS, CursorDeviceFollowMode.FOLLOW_SELECTION);
+      PinnableCursorDevice cursorDevice = cursorTrack.createCursorDevice("CURSOR_DEVICE", "My Cursor Device", Globals.NUMBER_OF_SENDS, CursorDeviceFollowMode.FOLLOW_SELECTION);
 
-//      CursorRemoteControlsPage cursorRemoteControlsPage = cursorDevice.createCursorRemoteControlsPage(9);
-//      cursorRemoteControlsPage.hasNext().markInterested();
-//      cursorRemoteControlsPage.hasPrevious().markInterested();
-//      cursorRemoteControlsPage.selectedPageIndex().markInterested();
-//      cursorRemoteControlsPage.setHardwareLayout(HardwareControlType.KNOB, 9);
-//
-//      for (int i = 0; i < 9; i++) {
-//         final RemoteControl parameter = cursorRemoteControlsPage.getParameter(i);
-//         parameter.markInterested();
-//         parameter.exists().markInterested();
-//         parameter.setIndication(true);
-//      }
+      CursorRemoteControlsPage cursorRemoteControlsPage = cursorDevice.createCursorRemoteControlsPage(9);
+      cursorRemoteControlsPage.hasNext().markInterested();
+      cursorRemoteControlsPage.hasPrevious().markInterested();
+      cursorRemoteControlsPage.selectedPageIndex().markInterested();
+      cursorRemoteControlsPage.setHardwareLayout(HardwareControlType.KNOB, 9);
+
+      for (int i = 0; i < 9; i++) {
+         final RemoteControl parameter = cursorRemoteControlsPage.getParameter(i);
+         parameter.markInterested();
+         parameter.exists().markInterested();
+         parameter.setIndication(true);
+      }
 
 
       // Create NoteInputs + Omni
@@ -95,7 +95,7 @@ public class DrivenByMeliExtension extends ControllerExtension
       // initialize controllers
       rolandA800Pro = new RolandA800Pro(
               host, transport, application, trackBank, sceneBank,
-              cursorClip, project, detailEditor, null, masterTrack
+              cursorClip, project, detailEditor, cursorRemoteControlsPage, masterTrack
       );
 
       amtFs2 = new AmtFs2(
@@ -105,7 +105,7 @@ public class DrivenByMeliExtension extends ControllerExtension
 
       paintAudioMidiCaptain = new PaintAudioMidiCaptain(
               host, transport, application, trackBank, sceneBank,
-              cursorClip, project, detailEditor, cursorTrack
+              cursorClip, project, detailEditor, cursorTrack, cursorDevice
       );
 
 

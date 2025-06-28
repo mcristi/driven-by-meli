@@ -26,10 +26,12 @@ public class PaintAudioMidiCaptain {
     private final Project project;
     private final DetailEditor detailEditor;
     private final CursorTrack cursorTrack;
+    private final PinnableCursorDevice cursorDevice;
 
     public PaintAudioMidiCaptain(ControllerHost host, Transport transport, Application application,
                                  TrackBank trackBank, SceneBank sceneBank, Clip cursorClip,
-                                 Project project, DetailEditor detailEditor, CursorTrack cursorTrack) {
+                                 Project project, DetailEditor detailEditor, CursorTrack cursorTrack,
+                                 PinnableCursorDevice cursorDevice) {
         this.host = host;
         this.transport = transport;
         this.application = application;
@@ -39,26 +41,24 @@ public class PaintAudioMidiCaptain {
         this.project = project;
         this.detailEditor = detailEditor;
         this.cursorTrack = cursorTrack;
+        this.cursorDevice = cursorDevice;
     }
 
     public void handleMidiEvent(int data1, int data2) {
         switch (data1) {
             case B1:
                 if (data2 == OFF) {
-                    TrackUtils.unarmAll(trackBank);
-                    TrackUtils.arm(trackBank, cursorTrack, 0);
+                    TrackUtils.arm(trackBank, cursorTrack, cursorDevice, 0);
                 }
                 break;
             case B2:
                 if (data2 == OFF) {
-                    TrackUtils.unarmAll(trackBank);
-                    TrackUtils.arm(trackBank, cursorTrack, 1);
+                    TrackUtils.arm(trackBank, cursorTrack, cursorDevice, 1);
                 }
                 break;
             case B3:
                 if (data2 == OFF) {
-                    TrackUtils.unarmAll(trackBank);
-                    TrackUtils.arm(trackBank, cursorTrack, 2);
+                    TrackUtils.arm(trackBank, cursorTrack, cursorDevice, 2);
                 }
                 break;
             case B4:
