@@ -9,9 +9,10 @@ import com.mcristi.utils.TrackUtils;
 public class PaintAudioMidiCaptain {
 
     // Midi CC mappings
-    private static final int B1 = 60, B2 = 61, B3 = 62, B4 = 63, UP = 64;
-    private static final int BA = 65, BB = 66, BC = 67, BD = 68, DOWN = 69;
-    private static final int EXP1 = 70, EXP2 = 71;
+    private static final int B1 = 60, B2 = 61, B3 = 62, B4 = 63;
+    private static final int BA = 65, BB = 66, BC = 67, BD = 68;
+    private static final int UP = 64, DOWN = 69;
+    private static final int EXP1 = 70, EXP2 = 71, ENCODER = 72;
 
     // Constants
     private static final int ON = 127, OFF = 0;
@@ -80,6 +81,8 @@ public class PaintAudioMidiCaptain {
 
             case BA:
                 if (data2 == OFF) {
+                    transport.isPlaying().set(false);
+                } else if (data2 == ON) {
                     transport.continuePlayback();
                 }
                 break;
@@ -101,6 +104,17 @@ public class PaintAudioMidiCaptain {
 
             case EXP1:
                 TrackUtils.setVolume(trackBank, cursorTrack, data2);
+                break;
+
+            case ENCODER:
+                // Map MIDI controller (0-127) to BPM range (53-180)
+                double bpm = 53 + (data2 / 127.0) * (180 - 53);
+                // Round to nearest integer (e.g., 66.0, 67.0, 68.0)
+                bpm = Math.round(bpm * 1) / 1.0;
+                // Normalize BPM to tempo range (20-666 BPM maps to 0-1)
+                double normalizedTempo = (bpm - 20) / (666 - 20);
+
+                transport.tempo().set(normalizedTempo);
                 break;
 
             default:
