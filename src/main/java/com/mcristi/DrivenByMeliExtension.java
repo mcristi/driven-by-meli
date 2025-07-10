@@ -105,7 +105,8 @@ public class DrivenByMeliExtension extends ControllerExtension
 
       paintAudioMidiCaptain = new PaintAudioMidiCaptain(
               host, transport, application, trackBank, sceneBank,
-              cursorClip, project, detailEditor, cursorTrack, cursorDevice
+              cursorClip, project, detailEditor, cursorTrack, cursorDevice,
+              cursorRemoteControlsPage
       );
 
 
