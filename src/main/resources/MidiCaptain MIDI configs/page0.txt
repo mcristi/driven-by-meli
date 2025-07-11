@@ -66,17 +66,9 @@ display_bank_offset = [1]
 
 
 [key0]
-keytimes = [3]
+keytimes = [1]
 ledmode = [normal]
-
-ledcolor1 = [0xFFFFFF][0x000000][0x000000]
-short_dw1 = [1][CC][60][0]
-
-ledcolor2 = [0x000000][0xFFFF00][0x000000]
-short_dw2 = [1][CC][61][0]
-
-ledcolor3 = [0x000000][0x000000][0x00FF00]
-short_dw3 = [1][CC][62][0]
+ledcolor1 = [0x000000][0x000000][0x000000]
 
 
 [key1]
@@ -86,23 +78,40 @@ ledcolor1 = [0x000000][0x000000][0x000000]
 
 
 [key2]
-keytimes = [1]
+keytimes = [4]
 ledmode = [normal]
-ledcolor1 = [0x000000][0x000000][0x000000]
+
+ledcolor1 = [0x000000][0x000000][0xFF6600]
+short_dw1 = [1][CC][71][1]
+
+ledcolor2 = [0x0000FF][0x000000][0x000000]
+short_dw2 = [1][CC][71][2]
+
+ledcolor3 = [0x000000][0x0000FF][0x000000]
+short_dw3 = [1][CC][71][3]
+
+ledcolor4 = [0xFF6600][0xFF6600][0x000000]
+short_dw4 = [1][CC][71][4]
 
 
 [key3]
-keytimes = [3]
+keytimes = [5]
 ledmode = [normal]
 
-ledcolor1 = [0x0000FF][0x000000][0x000000]
-short_dw1 = [1][CC][71][0]
+ledcolor1 = [0x330000][0x330000][0x330000]
+short_dw1 = [1][CC][73][4]
 
-ledcolor2 = [0x000000][0x0000FF][0x000000]
-short_dw2 = [1][CC][73][0]
+ledcolor2 = [0x330000][0x330000][0x000000]
+short_dw2 = [1][CC][73][8]
 
-ledcolor3 = [0x000000][0x000000][0x0000FF]
-short_dw3 = [1][CC][74][0]
+ledcolor3 = [0x330000][0x000000][0x000000]
+short_dw3 = [1][CC][73][16]
+
+ledcolor4 = [0x660000][0x660000][0x660000]
+short_dw4 = [1][CC][73][1]
+
+ledcolor5 = [0x000000][0x000000][0x000000]
+short_dw5 = [1][CC][73][0]
 
 
 [key4]
@@ -115,10 +124,14 @@ short_dw1 = [1][CC][64][0]
 [key5]
 keytimes = [2]
 ledmode = [normal]
+
 ledcolor1 = [0x00ff00][0x00ff00][0x00ff00]
-short_dw1 = [1][CC][65][127]
+short_up1 = [1][CC][65][127]
+long1 = [1][CC][75][0]
+
 ledcolor2 = [0x002200][0x002200][0x002200]
-short_dw2 = [1][CC][65][0]
+short_up2 = [1][CC][65][0]
+long2 = [1][CC][75][0]
 
 
 [key6]
@@ -130,9 +143,20 @@ long1 = [1][CC][66][0]
 
 
 [key7]
-keytimes = [1]
+keytimes = [3]
 ledmode = [normal]
-ledcolor1 = [0x000000][0x000000][0x000000]
+
+ledcolor1 = [0xFFFFFF][0x000000][0x000000]
+short_up1 = [1][CC][60][0]
+long1 = [1][CC][74][0]
+
+ledcolor2 = [0x000000][0xFFFF00][0x000000]
+short_up2 = [1][CC][61][0]
+long2 = [1][CC][74][0]
+
+ledcolor3 = [0x000000][0x000000][0x00FF00]
+short_up3 = [1][CC][62][0]
+long3 = [1][CC][74][0]
 
 
 [key8]

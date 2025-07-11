@@ -69,10 +69,13 @@ public class RecordUtils {
     }
 
     public static void quantizeClipLength(ControllerHost host, Clip cursorClip, Transport transport) {
+        String launchQuantization = transport.defaultLaunchQuantization().get();
+        if (!(launchQuantization.equals("1/4") || launchQuantization.equals("1/8"))) {
+            return;
+        }
+
         host.scheduleTask(() -> { // Delay to ensure the clip is launched
             if (cursorClip.exists().get()) { // Ensure clip content is loaded
-                String launchQuantization = transport.defaultLaunchQuantization().get();
-
                 if (launchQuantization.equals("1/4")) { // Calculate the nearest multiple of 4
                     double clipLength = cursorClip.getLoopLength().get();
                     double barLength = 4.0; // bar is 4 beats

@@ -4,6 +4,7 @@ import com.bitwig.extension.controller.api.CursorTrack;
 import com.bitwig.extension.controller.api.Track;
 import com.bitwig.extension.controller.api.TrackBank;
 import com.bitwig.extension.controller.api.PinnableCursorDevice;
+import com.bitwig.extension.controller.api.ControllerHost;
 
 
 public class TrackUtils {
@@ -38,7 +39,7 @@ public class TrackUtils {
         }
     }
 
-    public static void arm(TrackBank trackBank, CursorTrack cursorTrack, PinnableCursorDevice cursorDevice, int index) {
+    public static void arm(ControllerHost host, TrackBank trackBank, CursorTrack cursorTrack, PinnableCursorDevice cursorDevice, int index, boolean openWindow) {
         TrackUtils.unarmAll(trackBank);
 
         Track track = trackBank.getItemAt(index);
@@ -48,6 +49,7 @@ public class TrackUtils {
         cursorTrack.selectChannel(track);
 
         cursorDevice.selectFirst();
-        cursorDevice.isWindowOpen().set(true);
+        // NOTE: isWindowOpen().set(false) is not working without scheduling
+        host.scheduleTask(() -> cursorDevice.isWindowOpen().set(openWindow), 100);
     }
 }

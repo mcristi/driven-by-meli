@@ -6,19 +6,26 @@ import com.mcristi.utils.*;
 public class PaintAudioMidiCaptain {
 
     // Midi CC mappings
-    private static final int B1_1 = 60, B1_2 = 61, B1_3 = 62;
-    private static final int B4_1 = 71, B4_2 = 73, B4_3 = 74;
-    private static final int BA = 65, BB = 67, BB_LONG = 66, BD = 68, BD_LONG = 63;
+    private static final int B3 = 71;
+    private static final int B4 = 73;
+
+    private static final int BA = 65, BA_LONG = 75;
+    private static final int BB = 67, BB_LONG = 66;
+    private static final int BC_1 = 60, BC_2 = 61, BC_3 = 62, BC_LONG = 74;
+    private static final int BD = 68, BD_LONG = 63;
+
     private static final int UP = 64, DOWN = 69;
     private static final int EXP1 = 70, ENCODER = 72;
 
     // State
     private enum ExpressionMode {
         VOLUME,
-        GAIN,
+        DEVICE_PARAM_1,
+        DEVICE_PARAM_2,
         PAN
     }
     private static ExpressionMode expressionMode = ExpressionMode.VOLUME;
+    private static boolean openWindowOnArm = true;
 
     // Constants
     private static final int ON = 127, OFF = 0;
@@ -55,39 +62,34 @@ public class PaintAudioMidiCaptain {
 
     public void handleMidiEvent(int data1, int data2) {
         switch (data1) {
-            case B1_1:
-                if (data2 == OFF) {
-                    TrackUtils.arm(trackBank, cursorTrack, cursorDevice, 0);
-                }
-                break;
-            case B1_2:
-                if (data2 == OFF) {
-                    TrackUtils.arm(trackBank, cursorTrack, cursorDevice, 1);
-                }
-                break;
-            case B1_3:
-                if (data2 == OFF) {
-                    TrackUtils.arm(trackBank, cursorTrack, cursorDevice, 2);
+            case B3:
+                if (data2 == 1) {
+                    PaintAudioMidiCaptain.expressionMode = ExpressionMode.VOLUME;
+                    host.showPopupNotification("Expression Mode: Volume");
+                } else if (data2 == 2) {
+                    PaintAudioMidiCaptain.expressionMode = ExpressionMode.DEVICE_PARAM_1;
+                    host.showPopupNotification("Expression Mode: Device Param 1");
+                } else if (data2 == 3) {
+                    PaintAudioMidiCaptain.expressionMode = ExpressionMode.DEVICE_PARAM_2;
+                    host.showPopupNotification("Expression Mode: Device Param 2");
+                } else if (data2 == 4) {
+                    PaintAudioMidiCaptain.expressionMode = ExpressionMode.PAN;
+                    host.showPopupNotification("Expression Mode: Pan");
                 }
                 break;
 
-            case B4_1:
-                if (data2 == OFF) {
-                    PaintAudioMidiCaptain.expressionMode = ExpressionMode.VOLUME;
-                    host.showPopupNotification("Expression mode: Track VOLUME");
-                }
-                break;
-            case B4_2:
-                if (data2 == OFF) {
-                    PaintAudioMidiCaptain.expressionMode = ExpressionMode.GAIN;
-                    host.showPopupNotification("Expression mode: Track GAIN");
-                }
-                break;
-            case B4_3:
-                if (data2 == OFF) {
-                    PaintAudioMidiCaptain.expressionMode = ExpressionMode.PAN;
-                    host.showPopupNotification("Expression mode: Track PAN");
-                }
+            case B4:
+                final String quantization = switch (data2)
+                {
+                    case 16 -> "1/16";
+                    case 8 -> "1/8";
+                    case 4 -> "1/4";
+                    case 1 -> "1";
+                    case 0 -> "none";
+                    default -> "1/4";
+                };
+                transport.defaultLaunchQuantization().set(quantization);
+                host.showPopupNotification("Quantization: " + quantization);
                 break;
 
             case BA:
@@ -97,6 +99,10 @@ public class PaintAudioMidiCaptain {
                     transport.continuePlayback();
                 }
                 break;
+            case BA_LONG:
+                if (data2 == OFF) {
+                    transport.stop();
+                }
 
             case BB:
                 if (data2 == OFF) {
@@ -106,6 +112,28 @@ public class PaintAudioMidiCaptain {
             case BB_LONG:
                 if (data2 == OFF) {
                     transport.isMetronomeEnabled().toggle();
+                }
+                break;
+
+            case BC_1:
+                if (data2 == OFF) {
+                    TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, 0, PaintAudioMidiCaptain.openWindowOnArm);
+                }
+                break;
+            case BC_2:
+                if (data2 == OFF) {
+                    TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, 1, PaintAudioMidiCaptain.openWindowOnArm);
+                }
+                break;
+            case BC_3:
+                if (data2 == OFF) {
+                    TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, 2, PaintAudioMidiCaptain.openWindowOnArm);
+                }
+                break;
+            case BC_LONG:
+                if (data2 == OFF) {
+                    PaintAudioMidiCaptain.openWindowOnArm = !PaintAudioMidiCaptain.openWindowOnArm;
+                    host.showPopupNotification("Open First Device Window On Arm: " + PaintAudioMidiCaptain.openWindowOnArm);
                 }
                 break;
 
@@ -134,8 +162,10 @@ public class PaintAudioMidiCaptain {
             case EXP1:
                 if (PaintAudioMidiCaptain.expressionMode == ExpressionMode.VOLUME) {
                     TrackUtils.setVolume(trackBank, cursorTrack, data2);
-                } else if (PaintAudioMidiCaptain.expressionMode == ExpressionMode.GAIN) {
+                } else if (PaintAudioMidiCaptain.expressionMode == ExpressionMode.DEVICE_PARAM_1) {
                     DeviceUtils.setParameter(cursorRemoteControlsPage, 0, data2);
+                } else if (PaintAudioMidiCaptain.expressionMode == ExpressionMode.DEVICE_PARAM_2) {
+                    DeviceUtils.setParameter(cursorRemoteControlsPage, 1, data2);
                 } else if (PaintAudioMidiCaptain.expressionMode == ExpressionMode.PAN) {
                     TrackUtils.setPan(trackBank, cursorTrack, data2);
                 }
