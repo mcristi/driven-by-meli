@@ -29,7 +29,7 @@ public class RolandA800Pro {
     private final MasterTrack masterTrack;
 
     // State
-    private boolean isSend1Enabled = true;
+    private boolean isSend1Enabled = false;
 
 
     public RolandA800Pro(ControllerHost host, Transport transport, Application application,
@@ -69,9 +69,9 @@ public class RolandA800Pro {
                 break;
             case L9:
                 if (data2 == OFF) {
-                    isSend1Enabled = true;
-                } else if (data2 == ON) {
                     isSend1Enabled = false;
+                } else if (data2 == ON) {
+                    isSend1Enabled = true;
                 }
                 break;
 
