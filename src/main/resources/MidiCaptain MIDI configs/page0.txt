@@ -68,13 +68,15 @@ display_bank_offset = [1]
 [key0]
 keytimes = [1]
 ledmode = [normal]
-ledcolor1 = [0x000000][0x000000][0x000000]
+ledcolor1 = [0x330000][0x330000][0x330000]
+short_dw1 = [1][CC][76][0]
 
 
 [key1]
 keytimes = [1]
 ledmode = [normal]
 ledcolor1 = [0x000000][0x000000][0x000000]
+short_dw1 = [1][CC][77][0]
 
 
 [key2]
@@ -118,7 +120,7 @@ short_dw5 = [1][CC][73][0]
 keytimes = [1]
 ledmode = [normal]
 ledcolor1 = [0x333333][0x333333][0x333333]
-short_dw1 = [1][CC][64][0]
+short_dw1 = [1][CC][78][0]
 
 
 [key5]

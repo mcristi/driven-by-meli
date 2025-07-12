@@ -26,6 +26,11 @@ public class TrackUtils {
         trackBank.getItemAt(trackPosition).pan().set(value, 128);
     }
 
+    public static void stop(TrackBank trackBank, CursorTrack cursorTrack) {
+        int trackPosition = cursorTrack.position().get();
+        trackBank.getItemAt(trackPosition).stop();
+    }
+
     public static void unarmAll(TrackBank trackBank) {
         for (int i = 0; i < trackBank.itemCount().get(); i++) {
             try {

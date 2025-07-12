@@ -6,6 +6,8 @@ import com.mcristi.utils.*;
 public class PaintAudioMidiCaptain {
 
     // Midi CC mappings
+    private static final int B1 = 76;
+    private static final int B2 = 77;
     private static final int B3 = 71;
     private static final int B4 = 73;
 
@@ -14,7 +16,7 @@ public class PaintAudioMidiCaptain {
     private static final int BC_1 = 60, BC_2 = 61, BC_3 = 62, BC_LONG = 74;
     private static final int BD = 68, BD_LONG = 63;
 
-    private static final int UP = 64, DOWN = 69;
+    private static final int UP = 78, DOWN = 69;
     private static final int EXP1 = 70, ENCODER = 72;
 
     // State
@@ -62,6 +64,12 @@ public class PaintAudioMidiCaptain {
 
     public void handleMidiEvent(int data1, int data2) {
         switch (data1) {
+            case B1:
+                if (data2 == OFF) {
+                    TrackUtils.stop(trackBank, cursorTrack);
+                }
+                break;
+
             case B3:
                 if (data2 == 1) {
                     PaintAudioMidiCaptain.expressionMode = ExpressionMode.VOLUME;
