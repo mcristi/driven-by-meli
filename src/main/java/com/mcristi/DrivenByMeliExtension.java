@@ -43,15 +43,21 @@ public class DrivenByMeliExtension extends ControllerExtension
       SceneBank sceneBank = trackBank.sceneBank();
 
       for (int i = 0; i < Globals.NUMBER_OF_TRACKS; i++) {
-         trackBank.getItemAt(i).arm().markInterested();
-         trackBank.getItemAt(i).trackType().markInterested();
-         trackBank.getItemAt(i).exists().markInterested();
+         Track track = trackBank.getItemAt(i);
+         track.arm().markInterested();
+         track.trackType().markInterested();
+         track.exists().markInterested();
+
+         SourceSelector inputSelector = track.sourceSelector();
+         inputSelector.hasAudioInputSelected().markInterested();
 
          for (int j = 0; j < Globals.NUMBER_OF_SCENES; j++) {
             sceneBank.getScene(j).exists().markInterested();
-            trackBank.getItemAt(i).clipLauncherSlotBank().getItemAt(j).hasContent().markInterested();
-            trackBank.getItemAt(i).clipLauncherSlotBank().getItemAt(j).isRecording().markInterested();
-            trackBank.getItemAt(i).clipLauncherSlotBank().getItemAt(j).isPlaying().markInterested();
+
+            ClipLauncherSlotBank clipLauncherSlotBank = track.clipLauncherSlotBank();
+            clipLauncherSlotBank.getItemAt(j).hasContent().markInterested();
+            clipLauncherSlotBank.getItemAt(j).isRecording().markInterested();
+            clipLauncherSlotBank.getItemAt(j).isPlaying().markInterested();
          }
       }
 

@@ -98,4 +98,11 @@ public class RecordUtils {
         }, 1000);
     }
 
+    public static void switchSource(ControllerHost host, TrackBank trackBank, CursorTrack cursorTrack) {
+        int trackPosition = cursorTrack.position().get();
+        Track track = trackBank.getItemAt(trackPosition);
+        SourceSelector inputSelector = track.sourceSelector();
+        host.showPopupNotification("Has input: " + inputSelector.hasAudioInputSelected().get());
+        // TODO: set input source. No API currently
+    }
 }
