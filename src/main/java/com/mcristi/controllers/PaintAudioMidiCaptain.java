@@ -6,18 +6,18 @@ import com.mcristi.utils.*;
 public class PaintAudioMidiCaptain {
 
     // Midi CC mappings
-    private static final int B1 = 76;
-    private static final int B2 = 77;
-    private static final int B3 = 71;
-    private static final int B4 = 73;
+    private static final int B1 = 53;
+    private static final int B2 = 54;
+    private static final int B3 = 55;
+    private static final int B4 = 56;
 
-    private static final int BA = 65, BA_LONG = 75;
+    private static final int BA = 65, BA_LONG = 57;
     private static final int BB = 67, BB_LONG = 66;
-    private static final int BC_1 = 60, BC_2 = 61, BC_3 = 62, BC_LONG = 74;
+    private static final int BC_1 = 60, BC_2 = 61, BC_3 = 62, BC_LONG = 59;
     private static final int BD = 68, BD_LONG = 63;
 
-    private static final int UP = 78, DOWN = 69;
-    private static final int EXP1 = 70, ENCODER = 72;
+    private static final int UP = 58, DOWN = 69;
+    private static final int EXP1 = 50, EXP2 = 51, ENCODER = 52;
 
     // State
     private enum ExpressionMode {

@@ -104,35 +104,41 @@ public class DrivenByMeliExtension extends ControllerExtension
               cursorClip, project, detailEditor, cursorRemoteControlsPage, masterTrack
       );
 
-      amtFs2 = new AmtFs2(
-              host, application, trackBank, sceneBank, project,
-              detailEditor, transport, cursorClip
-      );
-
       paintAudioMidiCaptain = new PaintAudioMidiCaptain(
               host, transport, application, trackBank, sceneBank,
               cursorClip, project, detailEditor, cursorTrack, cursorDevice,
               cursorRemoteControlsPage
       );
 
+//      amtFs2 = new AmtFs2(
+//              host, application, trackBank, sceneBank, project,
+//              detailEditor, transport, cursorClip
+//      );
 
       host.showPopupNotification("driven-by-meli Initialized");
    }
 
    private void onMidi(int status, int data1, int data2) {
-      // host.showPopupNotification(status + " " + data1 + " " + data2);
+      if (status != 176) {
+         return; // the midi event is a note
+      }
 
-      if (status == 176) { // check it the event is not a midi note
-         if (data1 >= 14 && data1 <= 15) {  // AMT FS2 controller range
-            amtFs2.handleMidiEvent(data1, data2);
-         } else if (
-           (data1 >= 20 && data1 <= 32) ||   // L and B buttons
-           (data1 >= 102 && data1 <= 119)    // R and S controls
-        ) {
-            rolandA800Pro.handleMidiEvent(data1, data2);
-         } else if (data1 >= 60 && data1 <= 80) {
-            paintAudioMidiCaptain.handleMidiEvent(data1, data2);
-         }
+      // AKAI LPD8 (is using another script, so no worry for mapping overlap)
+      //  CC 13 - CC 22 => knobs
+      //  CC 21 - CC 28 => pads
+
+      if (
+        // Roland A800
+        //  CC20 - CC28 => L buttons
+        //  CC29 - CC32 => B buttons
+        //  CC71 - CC78 => A pads (to be freely mapped)
+        //  CC102 - CC109 + CC119 => R knobs
+        //  CC110 - CC118 => S sliders
+        (data1 >= 20 && data1 <= 32) || (data1 >= 102 && data1 <= 119)
+      ) {
+         rolandA800Pro.handleMidiEvent(data1, data2);
+      } else if (data1 >= 50 && data1 <= 70) {
+         paintAudioMidiCaptain.handleMidiEvent(data1, data2);
       }
    }
 
