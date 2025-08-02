@@ -5,6 +5,7 @@ import com.bitwig.extension.controller.api.Track;
 import com.bitwig.extension.controller.api.TrackBank;
 import com.bitwig.extension.controller.api.PinnableCursorDevice;
 import com.bitwig.extension.controller.api.ControllerHost;
+import com.mcristi.Globals;
 
 
 public class TrackUtils {
@@ -55,6 +56,6 @@ public class TrackUtils {
 
         cursorDevice.selectFirst();
         // NOTE: isWindowOpen().set(false) is not working without scheduling
-        host.scheduleTask(() -> cursorDevice.isWindowOpen().set(openWindow), 100);
+        host.scheduleTask(() -> cursorDevice.isWindowOpen().set(openWindow), Globals.VISUAL_FEEDBACK_TIMEOUT);
     }
 }

@@ -1,6 +1,7 @@
 package com.mcristi.controllers;
 
 import com.bitwig.extension.controller.api.*;
+import com.mcristi.Globals;
 import com.mcristi.utils.*;
 
 public class PaintAudioMidiCaptain {
@@ -64,7 +65,7 @@ public class PaintAudioMidiCaptain {
 
     public void handleMidiEvent(int data1, int data2) {
         switch (data1) {
-            case B1:
+            case B2:
                 if (data2 == OFF) {
                     TrackUtils.stop(trackBank, cursorTrack);
                 }
@@ -141,6 +142,7 @@ public class PaintAudioMidiCaptain {
             case BC_LONG:
                 if (data2 == OFF) {
                     PaintAudioMidiCaptain.openWindowOnArm = !PaintAudioMidiCaptain.openWindowOnArm;
+                    host.scheduleTask(() -> cursorDevice.isWindowOpen().set(PaintAudioMidiCaptain.openWindowOnArm), Globals.VISUAL_FEEDBACK_TIMEOUT);
                     host.showPopupNotification("Open First Device Window On Arm: " + PaintAudioMidiCaptain.openWindowOnArm);
                 }
                 break;
