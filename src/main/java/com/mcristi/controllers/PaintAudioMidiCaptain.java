@@ -75,18 +75,31 @@ public class PaintAudioMidiCaptain {
 
         switch (data1) {
             case B1:
+                int loopStartIncrement = transport.defaultLaunchQuantization().get().equals("1/4") ? 4 : 1;
                 if (data2 == 1) {
-                    cursorClip.getLoopStart().inc(4);
+                    cursorClip.getLoopStart().inc(loopStartIncrement);
+                    cursorClip.getLoopLength().inc(-loopStartIncrement);
                 } else if (data2 == 2) {
-                    cursorClip.getLoopStart().inc(-4);
-                    host.scheduleTask(() -> cursorClip.getPlayStart().set(cursorClip.getLoopStart().get()), Globals.VISUAL_FEEDBACK_TIMEOUT);
+                    cursorClip.getLoopStart().inc(-loopStartIncrement);
+                    cursorClip.getLoopLength().inc(loopStartIncrement);
                 }
+                host.scheduleTask(() -> {
+                    cursorClip.getPlayStart().set(cursorClip.getLoopStart().get());
+                    detailEditor.zoomToFit();
+                }, Globals.VISUAL_FEEDBACK_TIMEOUT);
+                break;
+
             case B2:
+                int loopLengthIncrement = transport.defaultLaunchQuantization().get().equals("1/4") ? 4 : 1;
                 if (data2 == 1) {
-                    cursorClip.getLoopLength().inc(-4);
+                    cursorClip.getLoopLength().inc(-loopLengthIncrement);
                 } else if (data2 == 2) {
-                    cursorClip.getLoopLength().inc(4);
+                    cursorClip.getLoopLength().inc(loopLengthIncrement);
                 }
+                host.scheduleTask(() -> {
+                    cursorClip.getPlayStart().set(cursorClip.getLoopStart().get());
+                    detailEditor.zoomToFit();
+                }, Globals.VISUAL_FEEDBACK_TIMEOUT);
                 break;
 
             case B3:
