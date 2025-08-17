@@ -15,9 +15,6 @@ public class RecordUtils {
     public static void recordClip(ControllerHost host, TrackBank trackBank, SceneBank sceneBank,
                                   Project project, DetailEditor detailEditor, Transport transport,
                                   Clip cursorClip) {
-        // TODO: find showNoteEditor, toggle does not work
-        // application.toggleNoteEditor();
-
         List<ClipLauncherSlotBank> slotBanks = new ArrayList<>();
         for (int i = 0; i < Globals.NUMBER_OF_TRACKS; i++) {
             Track track = trackBank.getItemAt(i);

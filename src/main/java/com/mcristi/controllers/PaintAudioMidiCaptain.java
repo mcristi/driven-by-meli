@@ -64,10 +64,28 @@ public class PaintAudioMidiCaptain {
     }
 
     public void handleMidiEvent(int data1, int data2) {
+//        host.showPopupNotification("Data received: " + data1 + " " + data2);
+
+//        Action[] actions = application.getActions();
+//        for (Action action : actions) {
+//            if (action.getName().contains("Follow") || action.getName().contains("follow")) {
+//                host.println("Action: " + action.getName() + " : " + action.getId());
+//            }
+//        }
+
         switch (data1) {
+            case B1:
+                if (data2 == 1) {
+                    cursorClip.getLoopStart().inc(4);
+                } else if (data2 == 2) {
+                    cursorClip.getLoopStart().inc(-4);
+                    host.scheduleTask(() -> cursorClip.getPlayStart().set(cursorClip.getLoopStart().get()), Globals.VISUAL_FEEDBACK_TIMEOUT);
+                }
             case B2:
-                if (data2 == OFF) {
-                    TrackUtils.stop(trackBank, cursorTrack);
+                if (data2 == 1) {
+                    cursorClip.getLoopLength().inc(-4);
+                } else if (data2 == 2) {
+                    cursorClip.getLoopLength().inc(4);
                 }
                 break;
 
@@ -126,16 +144,19 @@ public class PaintAudioMidiCaptain {
 
             case BC_1:
                 if (data2 == OFF) {
+                    application.getAction("Select sub panel 3").invoke();
                     TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, 0, PaintAudioMidiCaptain.openWindowOnArm);
                 }
                 break;
             case BC_2:
                 if (data2 == OFF) {
+                    application.getAction("Select sub panel 3").invoke();
                     TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, 1, PaintAudioMidiCaptain.openWindowOnArm);
                 }
                 break;
             case BC_3:
                 if (data2 == OFF) {
+                    application.getAction("Select sub panel 3").invoke();
                     TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, 2, PaintAudioMidiCaptain.openWindowOnArm);
                 }
                 break;
@@ -149,6 +170,7 @@ public class PaintAudioMidiCaptain {
 
             case BD:
                 if (data2 == OFF) {
+                    application.getAction("Select sub panel 1").invoke();
                     RecordUtils.recordClip(host, trackBank, sceneBank, project, detailEditor, transport, cursorClip);
                 }
                 break;

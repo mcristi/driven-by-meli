@@ -64,6 +64,8 @@ public class DrivenByMeliExtension extends ControllerExtension
       Clip cursorClip = host.createLauncherCursorClip(Globals.NUMBER_OF_TRACKS, Globals.NUMBER_OF_SCENES);
       cursorClip.exists().markInterested();
       cursorClip.getLoopLength().markInterested();
+      cursorClip.getLoopStart().markInterested();
+      cursorClip.getPlayStart().markInterested();
       cursorClip.getPlayStop().markInterested();
 
       CursorTrack cursorTrack = host.createCursorTrack("CURSOR_TRACK", "My Cursor Track", Globals.NUMBER_OF_SENDS, Globals.NUMBER_OF_SCENES, true);
