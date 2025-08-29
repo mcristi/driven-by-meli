@@ -14,7 +14,7 @@ public class PaintAudioMidiCaptain {
 
     private static final int BA = 65, BA_LONG = 57;
     private static final int BB = 67, BB_LONG = 66;
-    private static final int BC_1 = 60, BC_2 = 61, BC_3 = 62, BC_LONG = 59;
+    private static final int BC = 60;
     private static final int BD = 68, BD_LONG = 63;
 
     private static final int UP = 58, DOWN = 69;
@@ -29,6 +29,7 @@ public class PaintAudioMidiCaptain {
     }
     private static ExpressionMode expressionMode = ExpressionMode.VOLUME;
     private static boolean openWindowOnArm = true;
+    private static int trackOffset = 3;
 
     // Constants
     private static final int ON = 127, OFF = 0;
@@ -115,6 +116,10 @@ public class PaintAudioMidiCaptain {
                 } else if (data2 == 4) {
                     PaintAudioMidiCaptain.expressionMode = ExpressionMode.PAN;
                     host.showPopupNotification("Expression Mode: Pan");
+                } else if (data2 == 50) {
+                    PaintAudioMidiCaptain.openWindowOnArm = !PaintAudioMidiCaptain.openWindowOnArm;
+                    host.scheduleTask(() -> cursorDevice.isWindowOpen().set(PaintAudioMidiCaptain.openWindowOnArm), Globals.VISUAL_FEEDBACK_TIMEOUT);
+                    host.showPopupNotification("Open First Device Window On Arm: " + PaintAudioMidiCaptain.openWindowOnArm);
                 }
                 break;
 
@@ -155,29 +160,36 @@ public class PaintAudioMidiCaptain {
                 }
                 break;
 
-            case BC_1:
-                if (data2 == OFF) {
+            case BC:
+                if (data2 == 1) {
                     application.getAction("Select sub panel 3").invoke();
-                    TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, 0, PaintAudioMidiCaptain.openWindowOnArm);
-                }
-                break;
-            case BC_2:
-                if (data2 == OFF) {
+                    TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, PaintAudioMidiCaptain.trackOffset, PaintAudioMidiCaptain.openWindowOnArm);
+                } else if (data2 == 2) {
                     application.getAction("Select sub panel 3").invoke();
-                    TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, 1, PaintAudioMidiCaptain.openWindowOnArm);
-                }
-                break;
-            case BC_3:
-                if (data2 == OFF) {
+                    TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, PaintAudioMidiCaptain.trackOffset + 1, PaintAudioMidiCaptain.openWindowOnArm);
+                } else if (data2 == 3) {
                     application.getAction("Select sub panel 3").invoke();
-                    TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, 2, PaintAudioMidiCaptain.openWindowOnArm);
-                }
-                break;
-            case BC_LONG:
-                if (data2 == OFF) {
-                    PaintAudioMidiCaptain.openWindowOnArm = !PaintAudioMidiCaptain.openWindowOnArm;
-                    host.scheduleTask(() -> cursorDevice.isWindowOpen().set(PaintAudioMidiCaptain.openWindowOnArm), Globals.VISUAL_FEEDBACK_TIMEOUT);
-                    host.showPopupNotification("Open First Device Window On Arm: " + PaintAudioMidiCaptain.openWindowOnArm);
+                    TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, PaintAudioMidiCaptain.trackOffset + 2, PaintAudioMidiCaptain.openWindowOnArm);
+                } else if (data2 == 50) {
+                    if (PaintAudioMidiCaptain.trackOffset == 0) {
+                        host.showPopupNotification("Use STEREO input");
+                        TrackUtils.deactivate(trackBank, 0);
+                        TrackUtils.deactivate(trackBank, 1);
+                        TrackUtils.deactivate(trackBank, 2);
+                        TrackUtils.activate(trackBank, 3);
+                        TrackUtils.activate(trackBank, 4);
+                        TrackUtils.activate(trackBank, 5);
+                        PaintAudioMidiCaptain.trackOffset = 3;
+                    } else {
+                        host.showPopupNotification("Use MONO input");
+                        TrackUtils.activate(trackBank, 0);
+                        TrackUtils.activate(trackBank, 1);
+                        TrackUtils.activate(trackBank, 2);
+                        TrackUtils.deactivate(trackBank, 3);
+                        TrackUtils.deactivate(trackBank, 4);
+                        TrackUtils.deactivate(trackBank, 5);
+                        PaintAudioMidiCaptain.trackOffset = 0;
+                    }
                 }
                 break;
 

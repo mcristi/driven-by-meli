@@ -3,10 +3,6 @@ package com.mcristi.utils;
 import com.bitwig.extension.controller.api.*;
 import com.mcristi.Globals;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 public class RecordUtils {
 
     private RecordUtils() {
@@ -15,22 +11,12 @@ public class RecordUtils {
     public static void recordClip(ControllerHost host, TrackBank trackBank, SceneBank sceneBank,
                                   Project project, DetailEditor detailEditor, Transport transport,
                                   Clip cursorClip) {
-        List<ClipLauncherSlotBank> slotBanks = new ArrayList<>();
         for (int i = 0; i < Globals.NUMBER_OF_TRACKS; i++) {
             Track track = trackBank.getItemAt(i);
             if (track.arm().get()) {
                 ClipLauncherSlotBank slotBank = track.clipLauncherSlotBank();
-                slotBanks.add(slotBank);
+                host.scheduleTask(() -> recordClipOnTrack(host, slotBank, sceneBank, project, detailEditor, transport, cursorClip), 0);
             }
-        }
-
-        if (slotBanks.isEmpty()) {
-            host.showPopupNotification("No tracks armed!");
-            return;
-        }
-
-        for (ClipLauncherSlotBank slotBank : slotBanks) {
-            host.scheduleTask(() -> recordClipOnTrack(host, slotBank, sceneBank, project, detailEditor, transport, cursorClip), 0);
         }
     }
 
@@ -55,7 +41,7 @@ public class RecordUtils {
 
                 break; // Stop the loop
             } else if (!clip.hasContent().get()) {
-                slotBank.record(i);
+                clip.record();
 
                 clip.select();
                 clip.showInEditor();
@@ -65,18 +51,14 @@ public class RecordUtils {
         }
     }
 
-    public static void quantizeClipLength(ControllerHost host, Clip cursorClip, Transport transport, DetailEditor detailEditor) {
+    public static void quantizeClipLength(ControllerHost host, Clip clip, Transport transport, DetailEditor detailEditor) {
         String launchQuantization = transport.defaultLaunchQuantization().get();
         if (!(launchQuantization.equals("1/4") || launchQuantization.equals("1/8"))) {
             return;
         }
-        if (!cursorClip.exists().get()) {
-            host.showPopupNotification("No clip to quantize. Select a clip and try again.");
-            return;
-        }
 
         host.scheduleTask(() -> { // Delay to ensure the clip is launched
-            double clipLength = cursorClip.getLoopLength().get();
+            double clipLength = clip.getLoopLength().get();
             double quantizedLength = clipLength;
 
             if (launchQuantization.equals("1/4")) { // Calculate the nearest bar
@@ -86,7 +68,7 @@ public class RecordUtils {
             }
 
             // NOTE: if the quantizedLength is 0, the clip length remains the same, no need for check
-            cursorClip.getLoopLength().set(quantizedLength);
+            clip.getLoopLength().set(quantizedLength);
             host.scheduleTask(detailEditor::zoomToFit, Globals.VISUAL_FEEDBACK_TIMEOUT);
         }, 1000);
     }
