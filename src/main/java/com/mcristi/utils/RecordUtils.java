@@ -3,6 +3,9 @@ package com.mcristi.utils;
 import com.bitwig.extension.controller.api.*;
 import com.mcristi.Globals;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RecordUtils {
 
     private RecordUtils() {
@@ -11,12 +14,18 @@ public class RecordUtils {
     public static void recordClip(ControllerHost host, TrackBank trackBank, SceneBank sceneBank,
                                   Project project, DetailEditor detailEditor, Transport transport,
                                   Clip cursorClip, boolean quantizeClipLengthAfterRecord) {
+        List<ClipLauncherSlotBank> armedSlotBanks = new ArrayList<>();
+
         for (int i = 0; i < Globals.NUMBER_OF_TRACKS; i++) {
             Track track = trackBank.getItemAt(i);
             if (track.arm().get()) {
-                ClipLauncherSlotBank slotBank = track.clipLauncherSlotBank();
-                host.scheduleTask(() -> recordClipOnTrack(host, slotBank, sceneBank, project, detailEditor, transport, cursorClip, quantizeClipLengthAfterRecord), 0);
+                armedSlotBanks.add(track.clipLauncherSlotBank());
             }
+        }
+
+        boolean quantizeClipLength = quantizeClipLengthAfterRecord && armedSlotBanks.size() == 1;
+        for (ClipLauncherSlotBank slotBank : armedSlotBanks) {
+            host.scheduleTask(() -> recordClipOnTrack(host, slotBank, sceneBank, project, detailEditor, transport, cursorClip, quantizeClipLength), 0);
         }
     }
 
@@ -48,6 +57,7 @@ public class RecordUtils {
 
                 clip.select();
                 clip.showInEditor();
+                // TODO: enable Follow Playback
 
                 break; // Stop the loop
             }
