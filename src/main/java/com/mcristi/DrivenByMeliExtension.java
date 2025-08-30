@@ -2,7 +2,6 @@ package com.mcristi;
 
 import com.bitwig.extension.controller.api.*;
 import com.bitwig.extension.controller.ControllerExtension;
-import com.mcristi.controllers.AmtFs2;
 import com.mcristi.controllers.PaintAudioMidiCaptain;
 import com.mcristi.controllers.RolandA800Pro;
 
@@ -12,7 +11,6 @@ public class DrivenByMeliExtension extends ControllerExtension
     * Controllers handlers
     */
    private RolandA800Pro rolandA800Pro;
-   private AmtFs2 amtFs2;
    private PaintAudioMidiCaptain paintAudioMidiCaptain;
 
    protected DrivenByMeliExtension(final DrivenByMeliExtensionDefinition definition, final ControllerHost host)
@@ -112,11 +110,6 @@ public class DrivenByMeliExtension extends ControllerExtension
               cursorRemoteControlsPage
       );
 
-//      amtFs2 = new AmtFs2(
-//              host, application, trackBank, sceneBank, project,
-//              detailEditor, transport, cursorClip
-//      );
-
       host.showPopupNotification("driven-by-meli Initialized");
    }
 
@@ -127,7 +120,7 @@ public class DrivenByMeliExtension extends ControllerExtension
 
       // AKAI LPD8 (is using another script, so no worry for mapping overlap)
       //  CC 13 - CC 22 => knobs
-      //  CC 21 - CC 28 => pads
+      //  CC 71 - CC 78 => pads
 
       if (
         // Roland A800

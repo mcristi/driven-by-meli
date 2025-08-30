@@ -38,6 +38,7 @@ public class RecordUtils {
                 host.scheduleTask(detailEditor::zoomToFit, Globals.VISUAL_FEEDBACK_TIMEOUT);
 
                 if (quantizeClipLengthAfterRecord) {
+                    // TODO: this is not working correctly when multiple tracks are armed, because of the cursorClip is passed, not the clip
                     quantizeClipLength(host, cursorClip, transport, detailEditor);
                 }
 

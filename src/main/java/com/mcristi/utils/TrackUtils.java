@@ -50,7 +50,9 @@ public class TrackUtils {
     }
 
     public static void deactivate(TrackBank trackBank, int index) {
-        trackBank.getItemAt(index).isActivated().set(false);
+        Track track = trackBank.getItemAt(index);
+        track.arm().set(false);
+        track.isActivated().set(false);
     }
 
     public static void arm(ControllerHost host, TrackBank trackBank, CursorTrack cursorTrack, PinnableCursorDevice cursorDevice, int index, boolean openWindow) {

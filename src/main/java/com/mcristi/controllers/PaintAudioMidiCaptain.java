@@ -20,6 +20,9 @@ public class PaintAudioMidiCaptain {
     private static final int UP = 58, DOWN = 69;
     private static final int EXP1 = 50, EXP2 = 51, ENCODER = 52;
 
+    // Constants
+    private static final int ON = 127, OFF = 0;
+
     // State
     private enum ExpressionMode {
         VOLUME,
@@ -27,13 +30,10 @@ public class PaintAudioMidiCaptain {
         DEVICE_PARAM_2,
         PAN
     }
-    private static ExpressionMode expressionMode = ExpressionMode.VOLUME;
-    private static boolean openWindowOnArm = true;
-    private static int trackOffset = 3;
-    private static boolean quantizeClipLengthAfterRecord = true;
-
-    // Constants
-    private static final int ON = 127, OFF = 0;
+    private ExpressionMode expressionMode = ExpressionMode.VOLUME;
+    private boolean openWindowOnArm = true;
+    private int trackOffset = 3;
+    private boolean quantizeClipLengthAfterRecord = true;
 
     // API objects
     private final ControllerHost host;
@@ -106,28 +106,28 @@ public class PaintAudioMidiCaptain {
 
             case B3:
                 if (data2 == 1) {
-                    PaintAudioMidiCaptain.expressionMode = ExpressionMode.VOLUME;
+                    this.expressionMode = ExpressionMode.VOLUME;
                     host.showPopupNotification("Expression Mode: Volume");
                 } else if (data2 == 2) {
-                    PaintAudioMidiCaptain.expressionMode = ExpressionMode.DEVICE_PARAM_1;
+                    this.expressionMode = ExpressionMode.DEVICE_PARAM_1;
                     host.showPopupNotification("Expression Mode: Device Param 1");
                 } else if (data2 == 3) {
-                    PaintAudioMidiCaptain.expressionMode = ExpressionMode.DEVICE_PARAM_2;
+                    this.expressionMode = ExpressionMode.DEVICE_PARAM_2;
                     host.showPopupNotification("Expression Mode: Device Param 2");
                 } else if (data2 == 4) {
-                    PaintAudioMidiCaptain.expressionMode = ExpressionMode.PAN;
+                    this.expressionMode = ExpressionMode.PAN;
                     host.showPopupNotification("Expression Mode: Pan");
                 } else if (data2 == 50) {
-                    PaintAudioMidiCaptain.openWindowOnArm = !PaintAudioMidiCaptain.openWindowOnArm;
-                    host.scheduleTask(() -> cursorDevice.isWindowOpen().set(PaintAudioMidiCaptain.openWindowOnArm), Globals.VISUAL_FEEDBACK_TIMEOUT);
-                    host.showPopupNotification("Open First Device Window On Arm: " + PaintAudioMidiCaptain.openWindowOnArm);
+                    this.openWindowOnArm = !this.openWindowOnArm;
+                    host.scheduleTask(() -> cursorDevice.isWindowOpen().set(this.openWindowOnArm), Globals.VISUAL_FEEDBACK_TIMEOUT);
+                    host.showPopupNotification("Open First Device Window On Arm: " + this.openWindowOnArm);
                 }
                 break;
 
             case B4:
                 if (data2 == 50) {
-                    PaintAudioMidiCaptain.quantizeClipLengthAfterRecord = !PaintAudioMidiCaptain.quantizeClipLengthAfterRecord;
-                    host.showPopupNotification("Quantize Clip Length After Record: " + PaintAudioMidiCaptain.quantizeClipLengthAfterRecord);
+                    this.quantizeClipLengthAfterRecord = !this.quantizeClipLengthAfterRecord;
+                    host.showPopupNotification("Quantize Clip Length After Record: " + this.quantizeClipLengthAfterRecord);
                     break;
                 }
 
@@ -170,15 +170,15 @@ public class PaintAudioMidiCaptain {
             case BC:
                 if (data2 == 1) {
                     application.getAction("Select sub panel 3").invoke();
-                    TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, PaintAudioMidiCaptain.trackOffset, PaintAudioMidiCaptain.openWindowOnArm);
+                    TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, this.trackOffset, this.openWindowOnArm);
                 } else if (data2 == 2) {
                     application.getAction("Select sub panel 3").invoke();
-                    TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, PaintAudioMidiCaptain.trackOffset + 1, PaintAudioMidiCaptain.openWindowOnArm);
+                    TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, this.trackOffset + 1, this.openWindowOnArm);
                 } else if (data2 == 3) {
                     application.getAction("Select sub panel 3").invoke();
-                    TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, PaintAudioMidiCaptain.trackOffset + 2, PaintAudioMidiCaptain.openWindowOnArm);
+                    TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, this.trackOffset + 2, this.openWindowOnArm);
                 } else if (data2 == 50) {
-                    if (PaintAudioMidiCaptain.trackOffset == 0) {
+                    if (this.trackOffset == 0) {
                         host.showPopupNotification("Use STEREO input");
                         TrackUtils.deactivate(trackBank, 0);
                         TrackUtils.deactivate(trackBank, 1);
@@ -186,7 +186,7 @@ public class PaintAudioMidiCaptain {
                         TrackUtils.activate(trackBank, 3);
                         TrackUtils.activate(trackBank, 4);
                         TrackUtils.activate(trackBank, 5);
-                        PaintAudioMidiCaptain.trackOffset = 3;
+                        this.trackOffset = 3;
                     } else {
                         host.showPopupNotification("Use MONO input");
                         TrackUtils.activate(trackBank, 0);
@@ -195,7 +195,7 @@ public class PaintAudioMidiCaptain {
                         TrackUtils.deactivate(trackBank, 3);
                         TrackUtils.deactivate(trackBank, 4);
                         TrackUtils.deactivate(trackBank, 5);
-                        PaintAudioMidiCaptain.trackOffset = 0;
+                        this.trackOffset = 0;
                     }
                 }
                 break;
@@ -224,13 +224,13 @@ public class PaintAudioMidiCaptain {
                 break;
 
             case EXP1:
-                if (PaintAudioMidiCaptain.expressionMode == ExpressionMode.VOLUME) {
+                if (this.expressionMode == ExpressionMode.VOLUME) {
                     TrackUtils.setVolume(trackBank, cursorTrack, data2);
-                } else if (PaintAudioMidiCaptain.expressionMode == ExpressionMode.DEVICE_PARAM_1) {
+                } else if (this.expressionMode == ExpressionMode.DEVICE_PARAM_1) {
                     DeviceUtils.setParameter(cursorRemoteControlsPage, 0, data2);
-                } else if (PaintAudioMidiCaptain.expressionMode == ExpressionMode.DEVICE_PARAM_2) {
+                } else if (this.expressionMode == ExpressionMode.DEVICE_PARAM_2) {
                     DeviceUtils.setParameter(cursorRemoteControlsPage, 1, data2);
-                } else if (PaintAudioMidiCaptain.expressionMode == ExpressionMode.PAN) {
+                } else if (this.expressionMode == ExpressionMode.PAN) {
                     TrackUtils.setPan(trackBank, cursorTrack, data2);
                 }
                 break;
