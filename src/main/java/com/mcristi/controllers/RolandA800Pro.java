@@ -64,7 +64,7 @@ public class RolandA800Pro {
                 break;
             case L8:
                 if (data2 == ON) {
-                    RecordUtils.recordClip(host, trackBank, sceneBank, project, detailEditor, transport, cursorClip);
+                    RecordUtils.recordClip(host, trackBank, sceneBank, project, detailEditor, transport, cursorClip, true);
                 }
                 break;
             case L9:

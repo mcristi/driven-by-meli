@@ -30,6 +30,7 @@ public class PaintAudioMidiCaptain {
     private static ExpressionMode expressionMode = ExpressionMode.VOLUME;
     private static boolean openWindowOnArm = true;
     private static int trackOffset = 3;
+    private static boolean quantizeClipLengthAfterRecord = true;
 
     // Constants
     private static final int ON = 127, OFF = 0;
@@ -124,6 +125,12 @@ public class PaintAudioMidiCaptain {
                 break;
 
             case B4:
+                if (data2 == 50) {
+                    PaintAudioMidiCaptain.quantizeClipLengthAfterRecord = !PaintAudioMidiCaptain.quantizeClipLengthAfterRecord;
+                    host.showPopupNotification("Quantize Clip Length After Record: " + PaintAudioMidiCaptain.quantizeClipLengthAfterRecord);
+                    break;
+                }
+
                 final String quantization = switch (data2)
                 {
                     case 16 -> "1/16";
@@ -196,7 +203,7 @@ public class PaintAudioMidiCaptain {
             case BD:
                 if (data2 == OFF) {
                     application.getAction("Select sub panel 1").invoke();
-                    RecordUtils.recordClip(host, trackBank, sceneBank, project, detailEditor, transport, cursorClip);
+                    RecordUtils.recordClip(host, trackBank, sceneBank, project, detailEditor, transport, cursorClip, quantizeClipLengthAfterRecord);
                 }
                 break;
             case BD_LONG:

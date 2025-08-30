@@ -10,19 +10,19 @@ public class RecordUtils {
 
     public static void recordClip(ControllerHost host, TrackBank trackBank, SceneBank sceneBank,
                                   Project project, DetailEditor detailEditor, Transport transport,
-                                  Clip cursorClip) {
+                                  Clip cursorClip, boolean quantizeClipLengthAfterRecord) {
         for (int i = 0; i < Globals.NUMBER_OF_TRACKS; i++) {
             Track track = trackBank.getItemAt(i);
             if (track.arm().get()) {
                 ClipLauncherSlotBank slotBank = track.clipLauncherSlotBank();
-                host.scheduleTask(() -> recordClipOnTrack(host, slotBank, sceneBank, project, detailEditor, transport, cursorClip), 0);
+                host.scheduleTask(() -> recordClipOnTrack(host, slotBank, sceneBank, project, detailEditor, transport, cursorClip, quantizeClipLengthAfterRecord), 0);
             }
         }
     }
 
     private static void recordClipOnTrack(ControllerHost host, ClipLauncherSlotBank slotBank, SceneBank sceneBank,
                                           Project project, DetailEditor detailEditor, Transport transport,
-                                          Clip cursorClip) {
+                                          Clip cursorClip, boolean quantizeClipLengthAfterRecord) {
         for (int i = 0; i < Globals.NUMBER_OF_SCENES; i++) {
             if (!sceneBank.getScene(i).exists().get()) {
                 project.createScene();
@@ -37,7 +37,9 @@ public class RecordUtils {
                 clip.showInEditor();
                 host.scheduleTask(detailEditor::zoomToFit, Globals.VISUAL_FEEDBACK_TIMEOUT);
 
-                quantizeClipLength(host, cursorClip, transport, detailEditor);
+                if (quantizeClipLengthAfterRecord) {
+                    quantizeClipLength(host, cursorClip, transport, detailEditor);
+                }
 
                 break; // Stop the loop
             } else if (!clip.hasContent().get()) {

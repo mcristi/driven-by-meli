@@ -44,7 +44,7 @@ public class AmtFs2 {
                 break;
 
             case RIGHT:
-                RecordUtils.recordClip(host, trackBank, sceneBank, project, detailEditor, transport, cursorClip);
+                RecordUtils.recordClip(host, trackBank, sceneBank, project, detailEditor, transport, cursorClip, true);
                 break;
 
             default:

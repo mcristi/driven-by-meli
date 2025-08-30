@@ -103,23 +103,20 @@ long4 = [1][CC][55][50]
 
 
 [key3]
-keytimes = [5]
+keytimes = [3]
 ledmode = [normal]
 
 ledcolor1 = [0x330000][0x330000][0x330000]
-short_dw1 = [1][CC][56][4]
+short_up1 = [1][CC][56][4]
+long1 = [1][CC][56][50]
 
 ledcolor2 = [0x330000][0x330000][0x000000]
-short_dw2 = [1][CC][56][8]
+short_up2 = [1][CC][56][8]
+long2 = [1][CC][56][50]
 
 ledcolor3 = [0x330000][0x000000][0x000000]
-short_dw3 = [1][CC][56][16]
-
-ledcolor4 = [0x660000][0x660000][0x660000]
-short_dw4 = [1][CC][56][1]
-
-ledcolor5 = [0x000000][0x000000][0x000000]
-short_dw5 = [1][CC][56][0]
+short_up3 = [1][CC][56][16]
+long3 = [1][CC][56][50]
 
 
 [key4]
