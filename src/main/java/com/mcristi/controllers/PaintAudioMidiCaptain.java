@@ -169,13 +169,13 @@ public class PaintAudioMidiCaptain {
 
             case BC:
                 if (data2 == 1) {
-                    application.getAction("Select sub panel 3").invoke();
+                    ApplicationUtils.showDevicePanel(application);
                     TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, this.trackOffset, this.openWindowOnArm);
                 } else if (data2 == 2) {
-                    application.getAction("Select sub panel 3").invoke();
+                    ApplicationUtils.showDevicePanel(application);
                     TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, this.trackOffset + 1, this.openWindowOnArm);
                 } else if (data2 == 3) {
-                    application.getAction("Select sub panel 3").invoke();
+                    ApplicationUtils.showDevicePanel(application);
                     TrackUtils.arm(host, trackBank, cursorTrack, cursorDevice, this.trackOffset + 2, this.openWindowOnArm);
                 } else if (data2 == 50) {
                     if (this.trackOffset == 0) {
@@ -202,8 +202,7 @@ public class PaintAudioMidiCaptain {
 
             case BD:
                 if (data2 == OFF) {
-                    application.getAction("Select sub panel 1").invoke();
-                    RecordUtils.recordClip(host, trackBank, sceneBank, project, detailEditor, transport, cursorClip, quantizeClipLengthAfterRecord);
+                    RecordUtils.recordClip(host, application, trackBank, sceneBank, project, detailEditor, transport, cursorClip, quantizeClipLengthAfterRecord);
                 }
                 break;
             case BD_LONG:
