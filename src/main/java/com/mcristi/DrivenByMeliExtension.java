@@ -3,14 +3,12 @@ package com.mcristi;
 import com.bitwig.extension.controller.api.*;
 import com.bitwig.extension.controller.ControllerExtension;
 import com.mcristi.controllers.PaintAudioMidiCaptain;
-import com.mcristi.controllers.RolandA800Pro;
 
 public class DrivenByMeliExtension extends ControllerExtension
 {
    /**
     * Controllers handlers
     */
-   private RolandA800Pro rolandA800Pro;
    private PaintAudioMidiCaptain paintAudioMidiCaptain;
 
    protected DrivenByMeliExtension(final DrivenByMeliExtensionDefinition definition, final ControllerHost host)
@@ -45,6 +43,7 @@ public class DrivenByMeliExtension extends ControllerExtension
          track.arm().markInterested();
          track.trackType().markInterested();
          track.exists().markInterested();
+         track.isActivated().markInterested();
 
          SourceSelector inputSelector = track.sourceSelector();
          inputSelector.hasAudioInputSelected().markInterested();
@@ -85,25 +84,13 @@ public class DrivenByMeliExtension extends ControllerExtension
       }
 
 
-      // Create NoteInputs + Omni
+      // Create Midi Inputs
       MidiIn midiIn0 = host.getMidiInPort(0);
-      NoteInput multiBi = midiIn0.createNoteInput("MultiBi - Omni", "??????");
-      NoteInput multiBi1 = midiIn0.createNoteInput("MultiBi - Ch 1", "?0????");
-      NoteInput multiBi2 = midiIn0.createNoteInput("MultiBi - Ch 2", "?1????");
-
-      multiBi.setShouldConsumeEvents(false);
-      multiBi1.setShouldConsumeEvents(false);
-
       midiIn0.setMidiCallback(this::onMidi);
       midiIn0.setSysexCallback(this::onSysex);
 
 
       // initialize controllers
-      rolandA800Pro = new RolandA800Pro(
-              host, transport, application, trackBank, sceneBank,
-              cursorClip, project, detailEditor, cursorRemoteControlsPage, masterTrack
-      );
-
       paintAudioMidiCaptain = new PaintAudioMidiCaptain(
               host, transport, application, trackBank, sceneBank,
               cursorClip, project, detailEditor, cursorTrack, cursorDevice,
@@ -122,17 +109,7 @@ public class DrivenByMeliExtension extends ControllerExtension
       //  CC 13 - CC 22 => knobs
       //  CC 71 - CC 78 => pads
 
-      if (
-        // Roland A800
-        //  CC20 - CC28 => L buttons
-        //  CC29 - CC32 => B buttons
-        //  CC71 - CC78 => A pads (to be freely mapped)
-        //  CC102 - CC109 + CC119 => R knobs
-        //  CC110 - CC118 => S sliders
-        (data1 >= 20 && data1 <= 32) || (data1 >= 102 && data1 <= 119)
-      ) {
-         rolandA800Pro.handleMidiEvent(data1, data2);
-      } else if (data1 >= 50 && data1 <= 70) {
+     if (data1 >= 50 && data1 <= 70) {
          paintAudioMidiCaptain.handleMidiEvent(data1, data2);
       }
    }

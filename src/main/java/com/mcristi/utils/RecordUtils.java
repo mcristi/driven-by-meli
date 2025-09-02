@@ -75,7 +75,7 @@ public class RecordUtils {
         }
     }
 
-    public static void quantizeClipLength(ControllerHost host, Clip clip, Transport transport) {
+    private static void quantizeClipLength(ControllerHost host, Clip clip, Transport transport) {
         String launchQuantization = transport.defaultLaunchQuantization().get();
         double clipLength = clip.getLoopLength().get();
 
