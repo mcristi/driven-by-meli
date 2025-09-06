@@ -29,10 +29,6 @@ public class DrivenByMeliExtension extends ControllerExtension
       transport.isPlaying().markInterested();
       transport.defaultLaunchQuantization().markInterested();
 
-      MasterTrack masterTrack = host.createMasterTrack(0);
-      masterTrack.volume().markInterested();
-      masterTrack.volume().setIndication(true);
-
       TrackBank trackBank = host.createTrackBank(Globals.NUMBER_OF_TRACKS, Globals.NUMBER_OF_SENDS, Globals.NUMBER_OF_SCENES);
       trackBank.itemCount().markInterested();
 

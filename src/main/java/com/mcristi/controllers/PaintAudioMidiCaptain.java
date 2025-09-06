@@ -224,6 +224,12 @@ public class PaintAudioMidiCaptain {
                 break;
 
             case EXP1:
+                if (data2 == 1) {
+                    RecordUtils.recordClip(host, application, trackBank, sceneBank, project, detailEditor, transport, cursorClip, quantizeClipLengthAfterRecord);
+                }
+                break;
+
+            case EXP2:
                 if (this.expressionMode == ExpressionMode.VOLUME) {
                     TrackUtils.setVolume(trackBank, cursorTrack, data2);
                 } else if (this.expressionMode == ExpressionMode.DEVICE_PARAM_1) {
