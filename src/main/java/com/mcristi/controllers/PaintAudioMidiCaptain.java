@@ -224,7 +224,7 @@ public class PaintAudioMidiCaptain {
                 break;
 
             case EXP1:
-                if (data2 == 1) {
+                if (data2 < 64) {
                     RecordUtils.recordClip(host, application, trackBank, sceneBank, project, detailEditor, transport, cursorClip, quantizeClipLengthAfterRecord);
                 }
                 break;
